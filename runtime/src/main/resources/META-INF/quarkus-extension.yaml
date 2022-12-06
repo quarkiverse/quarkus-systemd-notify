@@ -1,0 +1,11 @@
+name: Systemd Notify
+description: Notify Linux service manager (systemd) about start-up completion and other service status changes
+metadata:
+  keywords:
+    - systemd
+    - notify
+    - linux
+  guide: https://quarkiverse.github.io/quarkiverse-docs/systemd-notify/dev/
+  categories:
+    - "integration"
+  status: "preview"

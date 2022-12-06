@@ -1,0 +1,5 @@
+name: quarkus-systemd-notify
+title: Quarkus Systemd Notify Extension
+version: dev
+nav:
+  - modules/ROOT/nav.adoc
