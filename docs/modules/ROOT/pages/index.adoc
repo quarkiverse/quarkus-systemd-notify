@@ -2,13 +2,13 @@
 
 include::./includes/attributes.adoc[]
 
-TIP: Describe what the extension does here.
+== Introduction
 
-== Installation
+This extension is used to notify Linux service manager (systemd) about start-up completion and other service status changes.
 
-If you want to use this extension, you need to add the `io.quarkiverse.systemd.notify:quarkus-systemd-notify` extension first to your build file.
+== Usage
 
-For instance, with Maven, add the following dependency to your POM file:
+To use the extension, add the dependency to the target project:
 
 [source,xml,subs=attributes+]
 ----
@@ -19,9 +19,57 @@ For instance, with Maven, add the following dependency to your POM file:
 </dependency>
 ----
 
-[[extension-configuration-reference]]
-== Extension Configuration Reference
+and configure the service unit file with the following minumum configurations:
 
-TIP: Remove this section if you don't have Quarkus configuration properties in your extension.
+[source,unitfile(systemd),subs=attributes+]
+----
+[Service]
+Type=notify
+NotifyAccess=all
+----
 
-include::includes/quarkus-systemd-notify.adoc[leveloffset=+1, opts=optional]
+== Systemd Service Example
+
+Assuming `quarkus-run.jar` is located at `/opt/quarkus-app/quarkus-run.jar`:
+
+- Create a unit configuration file at `/etc/systemd/system/quarkus.service`:
+
+[source,unitfile(systemd),subs=attributes+]
+----
+[Unit]
+Description=Quarkus Server
+After=network.target
+Wants=network.target
+
+[Service]
+Type=notify
+NotifyAccess=all
+ExecStart=/bin/java -jar /opt/quarkus-app/quarkus-run.jar
+SuccessExitStatus=0 143
+
+[Install]
+WantedBy=multi-user.target
+----
+
+- Enable the service (this will make it to run at system start-up as well):
+
+[source,shell,subs=attributes+]
+----
+sudo systemctl enable quarkus
+----
+
+- Start/Stop/Restart the service:
+
+[source,shell,subs=attributes+]
+----
+sudo systemctl start quarkus
+sudo systemctl stop quarkus
+sudo systemctl restart quarkus
+----
+
+- Check status of the service:
+
+[source,shell,subs=attributes+]
+----
+sudo systemctl status quarkus
+----
