@@ -18,7 +18,7 @@ To use the extension, add the dependency to the target project:
 <dependency>
     <groupId>io.quarkiverse.systemd.notify</groupId>
     <artifactId>quarkus-systemd-notify</artifactId>
-    <version>0.1.0</version>
+    <version>${quarkus.systemd.notify.version}</version>
 </dependency>
 ```
 
