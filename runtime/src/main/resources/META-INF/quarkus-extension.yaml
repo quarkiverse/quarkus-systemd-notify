@@ -5,7 +5,7 @@ metadata:
     - systemd
     - notify
     - linux
-  guide: https://quarkiverse.github.io/quarkiverse-docs/systemd-notify/dev/
+  guide: https://quarkiverse.github.io/quarkiverse-docs/quarkus-systemd-notify/dev/
   categories:
     - "integration"
   status: "preview"
