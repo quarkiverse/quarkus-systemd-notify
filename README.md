@@ -69,7 +69,7 @@ sudo systemctl stop quarkus
 sudo systemctl restart quarkus
 ```
 
-- check status of the service:
+- Check status of the service:
 
 ```
 sudo systemctl status quarkus
