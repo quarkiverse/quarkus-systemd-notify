@@ -4,7 +4,7 @@
     <parent>
         <groupId>io.quarkiverse.systemd.notify</groupId>
         <artifactId>quarkus-systemd-notify-parent</artifactId>
-        <version>0.2.0</version>
+        <version>999-SNAPSHOT</version>
     </parent>
     <artifactId>quarkus-systemd-notify-integration-tests</artifactId>
     <name>Quarkus Systemd Notify Extension - Integration Tests</name>
