@@ -9,9 +9,9 @@ import io.quarkus.runtime.ShutdownContext;
 import io.quarkus.runtime.annotations.Recorder;
 
 @Recorder
-public class SystemdNotifierRecorder {
+public class SystemdNotifyRecorder {
 
-    private static final Logger LOGGER = Logger.getLogger(SystemdNotifierRecorder.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(SystemdNotifyRecorder.class.getName());
 
     public void onQuarkusStarted(ShutdownContext shutdownContext) {
         boolean systemdAvailable = System.getenv("NOTIFY_SOCKET") != null;

@@ -1,6 +1,6 @@
 package io.quarkiverse.systemd.notify.deployment;
 
-import io.quarkiverse.systemd.notify.runtime.SystemdNotifierRecorder;
+import io.quarkiverse.systemd.notify.runtime.SystemdNotifyRecorder;
 import io.quarkus.deployment.annotations.BuildStep;
 import io.quarkus.deployment.annotations.Consume;
 import io.quarkus.deployment.annotations.ExecutionTime;
@@ -20,7 +20,7 @@ class SystemdNotifyProcessor {
     @BuildStep
     @Consume(ServiceStartBuildItem.class)
     @Record(ExecutionTime.RUNTIME_INIT)
-    void onQuarkusStarted(SystemdNotifierRecorder recorder, ShutdownContextBuildItem shutdownContextBuildItem) {
+    void onQuarkusStarted(SystemdNotifyRecorder recorder, ShutdownContextBuildItem shutdownContextBuildItem) {
         recorder.onQuarkusStarted(shutdownContextBuildItem);
     }
 }
