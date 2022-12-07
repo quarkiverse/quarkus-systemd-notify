@@ -22,7 +22,7 @@ To use the extension, add the dependency to the target project:
 </dependency>
 ```
 
-and configure the service unit file as follows:
+and configure the service unit file with the following minumum configurations:
 
 ```
 ...
@@ -32,6 +32,47 @@ Type=notify
 NotifyAccess=all
 
 ...
+```
+
+## Systemd Service Example
+
+Assuming `quarkus-run.jar` is located at `/opt/quarkus-app/quarkus-run.jar`:
+
+- Create a unit configuration file at `/etc/systemd/system/quarkus.service`:
+
+```
+[Unit]
+Description=Quarkus Server
+After=network.target
+Wants=network.target
+
+[Service]
+Type=notify
+NotifyAccess=all
+ExecStart=/bin/java -jar /opt/quarkus-app/quarkus-run.jar
+SuccessExitStatus=0 143
+
+[Install]
+WantedBy=multi-user.target
+```
+- Enable the service (this will make it to run at system start-up as well):
+
+```
+sudo systemctl enable quarkus
+```
+
+- Start/Stop/Restart the service:
+
+```
+sudo systemctl start quarkus
+sudo systemctl stop quarkus
+sudo systemctl restart quarkus
+```
+
+- check status of the service:
+
+```
+sudo systemctl status quarkus
 ```
 
 ## Contributors ✨
