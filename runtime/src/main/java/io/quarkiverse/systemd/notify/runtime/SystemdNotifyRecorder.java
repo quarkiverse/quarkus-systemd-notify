@@ -16,10 +16,14 @@ public class SystemdNotifyRecorder {
     public void onQuarkusStarted(ShutdownContext shutdownContext) {
         boolean systemdAvailable = System.getenv("NOTIFY_SOCKET") != null;
         if (systemdAvailable) {
-            shutdownContext.addShutdownTask(() -> sdNotify("STOPPING=1"));
+            shutdownContext.addShutdownTask(() -> {
+                LOGGER.info("Notifying systemd about service start-up completion");
+                sdNotify("STOPPING=1");
+            });
+            LOGGER.info("Notifying systemd about the beginning of the shutdown phase of the service");
             sdNotify("READY=1");
         } else {
-            LOGGER.warning("systemd is not available");
+            LOGGER.info("systemd is not available in current environment");
         }
     }
 
