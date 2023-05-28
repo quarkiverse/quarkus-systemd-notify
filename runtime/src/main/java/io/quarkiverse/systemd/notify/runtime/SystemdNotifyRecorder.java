@@ -14,16 +14,16 @@ public class SystemdNotifyRecorder {
     private static final Logger LOGGER = Logger.getLogger(SystemdNotifyRecorder.class.getName());
 
     public void onQuarkusStarted(ShutdownContext shutdownContext) {
-        boolean systemdAvailable = System.getenv("NOTIFY_SOCKET") != null;
-        if (systemdAvailable) {
+        boolean startedAsSystemdService = System.getenv("NOTIFY_SOCKET") != null;
+        if (startedAsSystemdService) {
             shutdownContext.addShutdownTask(() -> {
-                LOGGER.info("Notifying systemd about service start-up completion");
+                LOGGER.info("Notifying systemd about the beginning of the shutdown phase of the service...");
                 sdNotify("STOPPING=1");
             });
-            LOGGER.info("Notifying systemd about the beginning of the shutdown phase of the service");
+            LOGGER.info("Notifying systemd about service start-up completion...");
             sdNotify("READY=1");
         } else {
-            LOGGER.info("systemd is not available in current environment");
+            LOGGER.info("This app was not started as systemd service");
         }
     }
 
