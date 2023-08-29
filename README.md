@@ -29,7 +29,7 @@ and configure the service unit file with the following minumum configurations:
 
 [Service]
 Type=notify
-NotifyAccess=all
+AmbientCapabilities=CAP_SYS_ADMIN
 
 ...
 ```
@@ -48,7 +48,7 @@ Wants=network.target
 
 [Service]
 Type=notify
-NotifyAccess=all
+AmbientCapabilities=CAP_SYS_ADMIN
 ExecStart=/bin/java -jar /opt/quarkus-app/quarkus-run.jar
 SuccessExitStatus=0 143
 
