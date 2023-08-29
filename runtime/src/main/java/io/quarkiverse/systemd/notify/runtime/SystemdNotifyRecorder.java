@@ -17,13 +17,15 @@ public class SystemdNotifyRecorder {
         boolean startedAsSystemdService = System.getenv("NOTIFY_SOCKET") != null;
         if (startedAsSystemdService) {
             shutdownContext.addShutdownTask(() -> {
-                LOGGER.info("Notifying systemd about the beginning of the shutdown phase of the service...");
                 sdNotify("STOPPING=1");
+                sdNotify("BARRIER=1");
+                LOGGER.info("Notified systemd that this service is about to shutdown");
             });
-            LOGGER.info("Notifying systemd about service start-up completion...");
             sdNotify("READY=1");
+            sdNotify("BARRIER=1");
+            LOGGER.info("Notified systemd that this service started successfully");
         } else {
-            LOGGER.info("This app was not started as systemd service");
+            LOGGER.info("Quarkus was not started as systemd service");
         }
     }
 
@@ -37,8 +39,6 @@ public class SystemdNotifyRecorder {
                 try (var r = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
                     r.lines().forEach(l -> LOGGER.warning(String.format("systemd-notify output: %s", l)));
                 }
-            } else {
-                LOGGER.info(String.format("Called systemd-notify with state (%s)", state));
             }
         } catch (Exception e) {
             Log.error("Failed to call systemd-notify", e);
