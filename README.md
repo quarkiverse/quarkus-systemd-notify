@@ -75,6 +75,27 @@ sudo systemctl restart quarkus
 sudo systemctl status quarkus
 ```
 
+## systemd-notify with SELinux
+
+If SELinux (Mostly for RedHat OS) is enabled:
+
+```
+root# getenforce
+Enforcing
+```
+
+Add `systemd_notify_t` to the permissive types:
+
+```
+semanage permissive -a systemd_notify_t
+```
+
+You can check with:
+
+```
+semanage permissive -l
+```
+
 ## Contributors ✨
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
