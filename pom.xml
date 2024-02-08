@@ -4,7 +4,7 @@
   <parent>
     <groupId>io.quarkiverse</groupId>
     <artifactId>quarkiverse-parent</artifactId>
-    <version>15</version>
+    <version>16</version>
   </parent>
   <groupId>io.quarkiverse.systemd.notify</groupId>
   <artifactId>quarkus-systemd-notify-parent</artifactId>
@@ -23,10 +23,6 @@
     <tag>HEAD</tag>
   </scm>
   <properties>
-    <compiler-plugin.version>3.11.0</compiler-plugin.version>
-    <maven.compiler.release>17</maven.compiler.release>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <quarkus.version>3.7.1</quarkus.version>
   </properties>
   <dependencyManagement>
@@ -47,15 +43,6 @@
           <groupId>io.quarkus</groupId>
           <artifactId>quarkus-maven-plugin</artifactId>
           <version>${quarkus.version}</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>${compiler-plugin.version}</version>
-          <configuration>
-            <compilerArgs>
-              <arg>-parameters</arg>
-            </compilerArgs>
-          </configuration>
         </plugin>
       </plugins>
     </pluginManagement>
