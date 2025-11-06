@@ -19,7 +19,7 @@ To use the extension, add the dependency to the target project:
 </dependency>
 ----
 
-and configure the service unit file with the following minumum configurations:
+and configure the service unit file with the following minimum configurations:
 
 [source,unitfile(systemd),subs=attributes+]
 ----
