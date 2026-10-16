@@ -2,21 +2,30 @@ package io.quarkiverse.systemd.notify.runtime;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import io.quarkus.logging.Log;
-import io.quarkus.runtime.ShutdownContext;
-import io.quarkus.runtime.annotations.Recorder;
+import io.quarkus.core.StartContext;
 
-@Recorder
-public class SystemdNotifyRecorder {
+/**
+ * Notifies systemd of the lifecycle of the application, when it runs as a systemd service.
+ */
+public final class SystemdNotifier {
 
-    private static final Logger LOGGER = Logger.getLogger(SystemdNotifyRecorder.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(SystemdNotifier.class.getName());
 
-    public void onQuarkusStarted(ShutdownContext shutdownContext) {
+    private SystemdNotifier() {
+    }
+
+    /**
+     * Notifies systemd that the application started, and registers the notification that it stops.
+     *
+     * @param context the start context of the service
+     */
+    public static void notifyStarted(StartContext context) {
         boolean startedAsSystemdService = System.getenv("NOTIFY_SOCKET") != null;
         if (startedAsSystemdService) {
-            shutdownContext.addShutdownTask(() -> {
+            context.onStop(() -> {
                 sdNotify("STOPPING=1");
                 LOGGER.info("Notified systemd that this service is about to shutdown");
             });
@@ -40,7 +49,7 @@ public class SystemdNotifyRecorder {
                 }
             }
         } catch (Exception e) {
-            Log.error("Failed to call systemd-notify", e);
+            LOGGER.log(Level.SEVERE, "Failed to call systemd-notify", e);
         }
     }
 }
