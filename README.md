@@ -29,10 +29,15 @@ and configure the service unit file with the following minumum configurations:
 
 [Service]
 Type=notify
-AmbientCapabilities=CAP_SYS_ADMIN
+NotifyAccess=all
 
 ...
 ```
+
+The extension sends the notifications with `systemd-notify`, a child process of the application, which the default
+`NotifyAccess=main` rejects. `NotifyAccess=all` lets them through without any privilege (see
+[Unit settings](https://docs.quarkiverse.io/quarkus-systemd-notify/dev/index.html#notify-access) for the alternatives:
+a service run as root, or `AmbientCapabilities=CAP_SYS_ADMIN`).
 
 ## Systemd Service Example
 
@@ -49,7 +54,6 @@ Wants=network.target
 [Service]
 Type=notify
 NotifyAccess=all
-AmbientCapabilities=CAP_SYS_ADMIN
 ExecStart=/bin/java -jar /opt/quarkus-app/quarkus-run.jar
 SuccessExitStatus=0 143
 

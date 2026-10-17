@@ -18,11 +18,9 @@ public class SystemdNotifyRecorder {
         if (startedAsSystemdService) {
             shutdownContext.addShutdownTask(() -> {
                 sdNotify("STOPPING=1");
-                sdNotify("BARRIER=1");
                 LOGGER.info("Notified systemd that this service is about to shutdown");
             });
             sdNotify("READY=1");
-            sdNotify("BARRIER=1");
             LOGGER.info("Notified systemd that this service started successfully");
         } else {
             LOGGER.info("Quarkus was not started as systemd service");
@@ -31,6 +29,7 @@ public class SystemdNotifyRecorder {
 
     private static void sdNotify(String state) {
         try {
+            // systemd-notify waits until systemd processed the notification (systemd 246 and later)
             var process = new ProcessBuilder("systemd-notify", state).redirectErrorStream(true).start();
             int exitCode = process.waitFor();
             if (exitCode != 0) {
