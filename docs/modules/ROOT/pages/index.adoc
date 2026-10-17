@@ -25,8 +25,30 @@ and configure the service unit file with the following minimum configurations:
 ----
 [Service]
 Type=notify
-AmbientCapabilities=CAP_SYS_ADMIN
+NotifyAccess=all
 ----
+
+The application notifies systemd once it started (`READY=1`, after the `StartupEvent` observers), and when it begins to
+stop (`STOPPING=1`, before the `ShutdownEvent` observers): `systemctl start` returns once the application started, and
+the service is deactivating while the application stops.
+
+[[notify-access]]
+== Unit settings
+
+The extension sends the notifications with the `systemd-notify` command of systemd, a child process of the application.
+`Type=notify` services only accept the notifications of their main process by default (`NotifyAccess=main`), so the
+service needs one of these settings:
+
+* `NotifyAccess=all` (recommended): systemd accepts the notifications of every process of the service. It grants no
+privilege. With systemd 246 and later, `systemd-notify` waits until systemd processed each notification, as systemd
+needs to attribute it to the service; with older versions, a notification may be lost.
+* A service run as root (without `User=`): `systemd-notify` then sends the notifications on behalf of the application.
+* `AmbientCapabilities=CAP_SYS_ADMIN`: the same for a service run as another user, but this capability gives the
+application almost the privileges of root.
+
+`NotifyAccess=exec` is not enough: `systemd-notify` is not started by an `ExecStart=` command line. Without one of these
+settings, systemd logs `Got notification message from PID ..., but reception only permitted for main PID ...`, and the
+service fails to start once `TimeoutStartSec=` elapsed.
 
 == Systemd Service Example
 
@@ -43,7 +65,7 @@ Wants=network.target
 
 [Service]
 Type=notify
-AmbientCapabilities=CAP_SYS_ADMIN
+NotifyAccess=all
 ExecStart=/bin/java -jar /opt/quarkus-app/quarkus-run.jar
 SuccessExitStatus=0 143
 
