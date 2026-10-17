@@ -9,7 +9,8 @@
     <artifactId>quarkus-systemd-notify-integration-tests</artifactId>
     <name>Quarkus Systemd Notify Extension - Integration Tests</name>
     <properties>
-        <skipITs>true</skipITs>
+        <!-- SystemdNotifyIT runs the jar, or the native executable with -Dnative (the native-image profile) -->
+        <quarkus.native.enabled>false</quarkus.native.enabled>
     </properties>
     <dependencies>
         <dependency>
@@ -57,6 +58,8 @@
                             <systemPropertyVariables>
                                 <native.image.path>${project.build.directory}/${project.build.finalName}-runner
                                 </native.image.path>
+                                <quarkus-app.path>${project.build.directory}/quarkus-app</quarkus-app.path>
+                                <quarkus.native.enabled>${quarkus.native.enabled}</quarkus.native.enabled>
                                 <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
                                 <maven.home>${maven.home}</maven.home>
                             </systemPropertyVariables>
@@ -85,8 +88,7 @@
                 </plugins>
             </build>
             <properties>
-                <skipITs>false</skipITs>
-                <quarkus.package.type>native</quarkus.package.type>
+                <quarkus.native.enabled>true</quarkus.native.enabled>
             </properties>
         </profile>
     </profiles>
