@@ -1,13 +1,10 @@
 package io.quarkiverse.systemd.notify.deployment;
 
-import io.quarkiverse.systemd.notify.runtime.SystemdNotifyRecorder;
+import io.quarkiverse.systemd.notify.runtime.SystemdNotifier;
+import io.quarkus.core.Phase;
+import io.quarkus.core.deployment.service.ServiceRegistrar;
 import io.quarkus.deployment.annotations.BuildStep;
-import io.quarkus.deployment.annotations.Consume;
-import io.quarkus.deployment.annotations.ExecutionTime;
-import io.quarkus.deployment.annotations.Record;
-import io.quarkus.deployment.builditem.ApplicationStartBuildItem;
 import io.quarkus.deployment.builditem.FeatureBuildItem;
-import io.quarkus.deployment.builditem.ShutdownContextBuildItem;
 
 class SystemdNotifyProcessor {
     private static final String FEATURE = "systemd-notify";
@@ -18,14 +15,15 @@ class SystemdNotifyProcessor {
     }
 
     /**
-     * Notifies systemd once the application started : after the {@code StartupEvent} observers (which run once the
-     * services started). The shutdown tasks run in the reverse order : it notifies systemd that the application stops
-     * before the {@code ShutdownEvent} observers.
+     * Notifies systemd once the application started : after the {@code StartupEvent} observers, which run after the
+     * services started by the other extensions. It then stops before the {@code ShutdownEvent} observers.
      */
     @BuildStep
-    @Consume(ApplicationStartBuildItem.class)
-    @Record(ExecutionTime.RUNTIME_INIT)
-    void onQuarkusStarted(SystemdNotifyRecorder recorder, ShutdownContextBuildItem shutdownContextBuildItem) {
-        recorder.onQuarkusStarted(shutdownContextBuildItem);
+    void onQuarkusStarted(ServiceRegistrar serviceRegistrar) {
+        serviceRegistrar
+                .forService("io.quarkiverse.systemd-notify.notify")
+                .atPhase(Phase.SERVING)
+                .after("io.quarkus.arc.startup-event")
+                .onStart(ctx -> SystemdNotifier.notifyStarted(ctx));
     }
 }

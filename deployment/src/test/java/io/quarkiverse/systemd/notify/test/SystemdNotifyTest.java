@@ -1,19 +1,29 @@
 package io.quarkiverse.systemd.notify.test;
 
+import java.util.Set;
+
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-import io.quarkus.test.QuarkusUnitTest;
+import io.quarkiverse.systemd.notify.runtime.SystemdNotifier;
+import io.quarkus.test.QuarkusExtensionTest;
 
 public class SystemdNotifyTest {
 
+    private static final Set<String> STARTUP_MESSAGES = Set.of("Quarkus was not started as systemd service",
+            "Notified systemd that this service started successfully");
+
     // Start unit test with your extension loaded
     @RegisterExtension
-    static final QuarkusUnitTest unitTest = new QuarkusUnitTest()
-            .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class));
+    static final QuarkusExtensionTest unitTest = new QuarkusExtensionTest()
+            .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class))
+            .setLogRecordPredicate(record -> SystemdNotifier.class.getName().equals(record.getLoggerName()))
+            .assertLogRecords(records -> Assertions.assertTrue(
+                    records.stream().anyMatch(record -> STARTUP_MESSAGES.contains(record.getMessage())),
+                    "The service notifying systemd did not run when the application started"));
 
     @Test
     public void writeYourOwnUnitTest() {
