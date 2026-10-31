@@ -47,8 +47,9 @@ needs to attribute it to the service; with older versions, a notification may be
 application almost the privileges of root.
 
 `NotifyAccess=exec` is not enough: `systemd-notify` is not started by an `ExecStart=` command line. Without one of these
-settings, systemd logs `Got notification message from PID ..., but reception only permitted for main PID ...`, and the
-service fails to start once `TimeoutStartSec=` elapsed.
+settings, systemd rejects the notifications, and the service fails to start once `TimeoutStartSec=` elapsed. systemd
+logs `Got notification message from PID ..., but reception only permitted for main PID ...`: at the debug level since
+systemd 256 (`systemd-analyze log-level debug` shows it).
 
 == Systemd Service Example
 

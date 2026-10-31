@@ -91,7 +91,9 @@ class SystemdNotifyIT {
 
     /**
      * An unprivileged user without CAP_SYS_ADMIN nor NotifyAccess=all : systemd-notify sends the notifications under
-     * its own PID, the default NotifyAccess=main rejects them, and the service fails to start.
+     * its own PID, the default NotifyAccess=main rejects them, and the service fails to start. systemd logs the
+     * rejection ("but reception only permitted for main PID") at the debug level since systemd 256 : not in the journal
+     * by default, so the test checks that the application sent READY=1 and that systemd still timed out.
      */
     @Test
     void notificationsRejectedWithoutCapSysAdminNorNotifyAccessAll() {
@@ -99,7 +101,7 @@ class SystemdNotifyIT {
             assertNotEquals(0, service.start().exitCode(), service::journal);
             assertEquals("timeout", service.show("Result").get("Result"), service::journal);
             String journal = service.journal();
-            assertTrue(journal.contains("but reception only permitted for main PID"), journal);
+            assertTrue(journal.contains("Notified systemd that this service started successfully"), journal);
         }
     }
 }
