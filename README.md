@@ -1,10 +1,8 @@
 # Quarkus Systemd Notify Extension
 
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![Version](https://img.shields.io/maven-central/v/io.quarkiverse.systemd.notify/quarkus-systemd-notify?logo=apache-maven&style=flat-square)](https://central.sonatype.com/artifact/io.quarkiverse.systemd.notify/quarkus-systemd-notify) <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
-
-[![Version](https://img.shields.io/maven-central/v/io.quarkiverse.systemd.notify/quarkus-systemd-notify?logo=apache-maven&style=flat-square)](https://search.maven.org/artifact/io.quarkiverse.systemd.notify/quarkus-systemd-notify)
 
 ## Introduction
 
